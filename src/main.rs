@@ -28,6 +28,10 @@ fn main() {
     let mut stocks: Vec<Stock> = Vec::new(); // Create an empty vector to store stock names
     
     for i in 0..num_of_stocks() {
+        if total_budget < 0.0 {
+            panic!("Budget exceeded. Exiting."); // Exit the loop if the budget is exceeded
+        };
+
         println!("Enter stock name {}: ", i + 1);
         let mut input_name = String::new();
         io::stdin().read_line(&mut input_name).expect("Failed to read input");
@@ -45,9 +49,8 @@ fn main() {
         let budget: f32 = input_budget.trim().parse().expect("Invalid input, please enter a number");
         total_budget -= budget;
         println!("Leftover Budget: {}", total_budget);
-
-        if i > 0 && total_budget < 0.0 {
-            panic!("Budget exceeded. Exiting."); // Exit the loop if the budget is exceeded
+        if total_budget < 0.0 {
+            panic!("Budget is less then 100");
         };
 
         let stock = Stock {
