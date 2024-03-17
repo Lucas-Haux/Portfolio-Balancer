@@ -1,5 +1,4 @@
 use std::io;
-use std::process::abort;
 
 struct Stock {
     name: String, 
@@ -48,7 +47,7 @@ fn main() {
         println!("Leftover Budget: {}", total_budget);
 
         if i > 0 && total_budget < 0.0 {
-            panic!println!("Budget exceeded. Exiting."); // Exit the loop if the budget is exceeded
+            panic!("Budget exceeded. Exiting."); // Exit the loop if the budget is exceeded
         };
 
         let stock = Stock {
