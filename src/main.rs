@@ -1,5 +1,4 @@
 use std::io;
-i
 use std::process::abort;
 
 struct Stock {
