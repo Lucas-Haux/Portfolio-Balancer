@@ -2,8 +2,9 @@ use std::io;
 
 struct Stock {
     name: String, 
-    price: i32,
+    price: f32,
     budget: f32,
+    shares: f32
 }
 
 fn main() {
@@ -18,8 +19,7 @@ fn main() {
         let input_num: i32 = match input_str.trim().parse() {
             Ok(num) => num,
             Err(_) => {
-                println!("Please enter a valid integer");
-                return 0;
+                panic!("Please enter a valid integer");
             }
         };
         return input_num;
@@ -39,8 +39,8 @@ fn main() {
         
         println!("Enter price for {}:", name);   
         let mut input_price = String::new();
-        io::stdin().read_line(&mut input_price).expect("Failed to read input");
-        let price: i32 = input_price.trim().parse().expect("Ivalid input, please enter a number");
+        io::stdin().read_line(&mut input_price).expect("failed to read input");
+        let price: f32 = input_price.trim().parse().expect("ivalid input, please enter a number");
 
         println!("Leftover Budget: {}", total_budget);
         println!("Enter budget for {}:", name);
@@ -57,6 +57,7 @@ fn main() {
             name,
             price,
             budget,
+            shares: 0.0,
         };
         stocks.push(stock);
     }
@@ -65,4 +66,28 @@ fn main() {
     for stock in &stocks {
        println!("Name: {}, Price: {}, Budget: {}%", stock.name, stock.price, stock.budget);
     }  
+
+    println!("How much are you willing to invest?");
+    let mut input_invest = String::new();
+    io::stdin().read_line(&mut input_invest).expect("failed to read input");
+    let mut investment: f32 = input_invest.trim().parse().expect("ivalid input, please enter a number"); 
+    
+    let mut total_price: f32 = 0.0;
+    for stock in &mut stocks {
+        total_price += stock.price;
+        stock.shares += 1.0;
+        println!("Name: {}, Price: {}, Budget: {}%, Shares: {}", stock.name, stock.price, stock.budget, stock.shares);
+    }
+    investment -= total_price;
+
+    println!("investment left over: {}", investment);
+    for stock in &mut stocks {
+        let mut spent = investment * (stock.budget / 100.0);
+        println!("spent: {}", spent);
+        while spent >= stock.price {
+            spent -= stock.price;
+            stock.shares += 1.0;
+        };
+        println!("Name: {}, Price: {}, Budget: {}%, Shares: {}", stock.name, stock.price, stock.budget, stock.shares);
+    }
 }
