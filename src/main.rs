@@ -51,7 +51,7 @@ fn main() {
         let price: f32 = input_price.trim().parse()
             .expect("ivalid input, please enter a number");
 
-        // Tell user their current budget and get the budget
+        // Get budget and infrom user about budget 
         println!("Leftover Budget: {}", total_budget);
         println!("Enter budget for {}:", name);
         let mut input_budget = String::new();
@@ -76,35 +76,50 @@ fn main() {
         array_stocks.push(custom_stock);
     }
 
+    // List all the stocks and the info with them
     println!(); 
     println!("Stocks:");
     for custom_stock in &array_stocks {
        println!("Name: {}, Price: {}, Budget: {}%", custom_stock.name, custom_stock.price, custom_stock.budget);
     }  
 
+    // Get investment amount
     println!();
     println!("How much are you willing to invest?");
     let mut input_invest = String::new();
-    io::stdin().read_line(&mut input_invest).expect("failed to read input");
-    let mut investment: f32 = input_invest.trim().parse().expect("ivalid input, please enter a number"); 
+    io::stdin()
+        .read_line(&mut input_invest)
+        .expect("failed to read input");
+    let mut investment: f32 = input_invest.trim().parse()
+        .expect("ivalid input, please enter a number"); 
     
+    // Buy at one of each stock first  
     let mut total_price: f32 = 0.0;
     for custom_stock in &mut array_stocks {
         total_price += custom_stock.price;
         custom_stock.shares += 1.0;
-        println!("Name: {}, Price: {}, Budget: {}%, Shares: {}", custom_stock.name, custom_stock.price, custom_stock.budget, custom_stock.shares);
+    println!("Name: {}, Price: {}, Budget: {}%, Shares: {}", custom_stock.name, custom_stock.price, custom_stock.budget, custom_stock.shares);
     }
     investment -= total_price;
-
     println!("investment left over: {}", investment);
+
     println!();
     for custom_stock in &mut array_stocks {
-        let mut spent = investment * (custom_stock.budget / 100.0);
+        let mut spent = investment * (custom_stock.budget / 100.0); // Get the amount of money
+                                                                    // needed to be spent for stock
         println!("spent: {}", spent);
+    
         while spent >= custom_stock.price {
-            spent -= custom_stock.price;
-            custom_stock.shares += 1.0;
-        };
+            let shares_to_buy = spent / custom_stock.price;
+            let shares_to_buy = shares_to_buy.floor(); // Round down to the nearest whole number of shares
+            spent -= custom_stock.price * shares_to_buy;
+            custom_stock.shares += shares_to_buy as f32;
+        }
+    }
+
+    // List all stocks and data
+    for custom_stock in &array_stocks {
+        println!();
         println!("Name: {}, Price: {}, Budget: {}%, Shares: {}", custom_stock.name, custom_stock.price, custom_stock.budget, custom_stock.shares);
     }
 }
